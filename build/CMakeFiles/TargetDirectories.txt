@@ -1,0 +1,3 @@
+/home/nathan/projects/massSpringExperiments/build/CMakeFiles/main.dir
+/home/nathan/projects/massSpringExperiments/build/CMakeFiles/edit_cache.dir
+/home/nathan/projects/massSpringExperiments/build/CMakeFiles/rebuild_cache.dir
