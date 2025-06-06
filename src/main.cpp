@@ -17,6 +17,7 @@
 #include "ShaderHandler.h"
 #include "Input.h"
 #include "PickingTexture.h"
+#include "CollisionPlane.h"
 
 int main()
 {
@@ -58,7 +59,7 @@ int main()
     glm::mat4 rotation{ glm::rotate(glm::mat4{ 1.0f }, glm::radians(90.0f), glm::vec3{ 0.0f, 1.0f, 0.0f }) };
     rotation = glm::rotate(rotation, glm::radians(-90.0f), glm::vec3{ 1.0f, 0.0f, 0.0f });
     //TetraObject massSpringObject{argv[1], 10.0f, rotation, false };
-    //const CollisionPlane collisionPlane{ 10.0f, -10.0f };
+    const CollisionPlane collisionPlane{ 10.0f, -10.0f };
     PickingTexture pickingTexture{ mode->width, mode->height };
 
     // ****************
@@ -195,7 +196,7 @@ int main()
 
         // Render collision plane
         glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 0.0f, 0.5f, 0.0f }));
-        //collisionPlane.draw();
+        collisionPlane.draw();
 
         // Render mass-spring objct
         glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 0.0f, 0.7f, 1.0f }));
