@@ -18,6 +18,7 @@
 #include "Input.h"
 #include "PickingTexture.h"
 #include "CollisionPlane.h"
+#include "MassSpringObject.h"
 
 int main()
 {
@@ -59,6 +60,7 @@ int main()
     glm::mat4 rotation{ glm::rotate(glm::mat4{ 1.0f }, glm::radians(90.0f), glm::vec3{ 0.0f, 1.0f, 0.0f }) };
     rotation = glm::rotate(rotation, glm::radians(-90.0f), glm::vec3{ 1.0f, 0.0f, 0.0f });
     //TetraObject massSpringObject{argv[1], 10.0f, rotation, false };
+    MassSpringObject massSpringObject{};
     const CollisionPlane collisionPlane{ 10.0f, -10.0f };
     PickingTexture pickingTexture{ mode->width, mode->height };
 
@@ -87,6 +89,7 @@ int main()
     GLfloat lastUpdateTime{ static_cast<GLfloat>(glfwGetTime()) };
 
     GLuint selectedTriangle{ 0xFFFFFFFFu };
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while (!glfwWindowShouldClose(window)) 
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -189,7 +192,6 @@ int main()
             glDisable(GL_POLYGON_OFFSET_FILL);
         }
 
-        // Render object to screen
         glUseProgram(mainShader);
         glUniformMatrix4fv(glGetUniformLocation(mainShader, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniform3fv(glGetUniformLocation(mainShader, "lightDir"), 1, glm::value_ptr(lightDirInViewSpace));
@@ -199,9 +201,9 @@ int main()
         collisionPlane.draw();
 
         // Render mass-spring objct
-        glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 0.0f, 0.7f, 1.0f }));
+        glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 1.0f, 1.0f, 1.0f }));
         //massSpringPlane.draw();
-        //massSpringObject.draw();
+        massSpringObject.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
