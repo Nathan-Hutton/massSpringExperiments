@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/orthonormalize.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -176,6 +177,7 @@ int main()
             }
 
             //massSpringObject.updatePhysics(fixedDeltaTime);
+			massSpringObject.updateVertices();
             accumulator -= fixedDeltaTime;
         }
 
@@ -203,6 +205,8 @@ int main()
         // Render mass-spring objct
         glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 1.0f, 1.0f, 1.0f }));
         //massSpringPlane.draw();
+		massSpringObject.updateVertices();
+		massSpringObject.updateVBO();
         massSpringObject.draw();
 
         glfwSwapBuffers(window);

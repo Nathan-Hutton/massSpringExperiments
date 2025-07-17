@@ -28,7 +28,6 @@ endif()
 set(OpenGL_GL_PREFERENCE GLVND)
 
 # Find packages
-find_package(assimp REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -39,5 +38,4 @@ file(GLOB SOURCES "src/*.cpp")
 add_executable(main ${SOURCES})
 
 # Link libraries
-target_link_libraries(main ${ASSIMP_LIBRARIES} glfw GLEW ${OPENGL_LIBRARIES} Eigen3::Eigen)
-include_directories(${ASSIMP_INCLUDE_DIRS})
+target_link_libraries(main glfw GLEW ${OPENGL_LIBRARIES} Eigen3::Eigen)
