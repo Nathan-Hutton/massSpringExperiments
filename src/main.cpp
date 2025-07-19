@@ -90,7 +90,6 @@ int main()
     GLfloat lastUpdateTime{ static_cast<GLfloat>(glfwGetTime()) };
 
     GLuint selectedTriangle{ 0xFFFFFFFFu };
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while (!glfwWindowShouldClose(window)) 
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -200,6 +199,7 @@ int main()
 
         // Render collision plane
         glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 0.0f, 0.5f, 0.0f }));
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         collisionPlane.draw();
 
         // Render mass-spring objct
@@ -207,6 +207,7 @@ int main()
         //massSpringPlane.draw();
 		massSpringObject.updatePoints(deltaTime);
 		massSpringObject.updateVBO();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         massSpringObject.draw();
 
         glfwSwapBuffers(window);

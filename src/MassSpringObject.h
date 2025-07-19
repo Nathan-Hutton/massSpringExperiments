@@ -86,6 +86,7 @@ class MassSpringObject
 		void updatePoints(float deltaTime)
 		{
 			constexpr float gravityForce = -9.81f;
+			constexpr float damping = 0.995f;
 
 			for (const Spring& spring : m_springs)
 			{
@@ -114,6 +115,7 @@ class MassSpringObject
 
 				// Update velocity
 				point.m_velocity += point.m_force * deltaTime;
+				point.m_velocity *= damping;
 				point.m_force = glm::vec3{ 0.0f };
 
 				// Update position
