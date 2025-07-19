@@ -46,6 +46,18 @@ class MassSpringObject
 				}
 			};
 
+			// Make springs
+			for (size_t i{ 0 }; i < m_points.size(); ++i)
+			{
+				for (size_t j{ 0 }; j < m_points.size(); ++j)
+				{
+					if (i == j)
+						continue;
+
+					m_springs.emplace_back(Spring{ i, j, glm::length(m_points[i].m_position - m_points[j].m_position), 1.0f });
+				}
+			}
+
             m_vertices.resize(m_points.size());
 			m_indices = 
 			{
@@ -73,15 +85,6 @@ class MassSpringObject
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
 
-		void updateVBO()
-		{
-			for (size_t i{ 0 }; i < m_points.size(); ++i)
-				m_vertices[i] = m_points[i].m_position;
-
-			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_vertices.size() * 3, m_vertices.data());
-		}
-		
 		void updatePoints()
 		{
 			for (MassSpringPoint& point : m_points)
@@ -93,6 +96,15 @@ class MassSpringObject
 			}
 		}
 
+		void updateVBO()
+		{
+			for (size_t i{ 0 }; i < m_points.size(); ++i)
+				m_vertices[i] = m_points[i].m_position;
+
+			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_vertices.size() * 3, m_vertices.data());
+		}
+		
         void draw() const
         {
             glBindVertexArray(m_VAO);
