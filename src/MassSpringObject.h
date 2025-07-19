@@ -7,6 +7,7 @@ struct MassSpringPoint
 {
 	glm::vec3 m_position{ 0.0f };
 	glm::vec3 m_velocity{ 0.0f };
+	glm::vec3 m_force{ 0.0f };
 	bool fixed{ false };
 };
 
@@ -27,20 +28,24 @@ class MassSpringObject
 				{ // bottom left
 					glm::vec3{ -5.0f, -5.0f, 0.0f },
 					glm::vec3{ 0.0f, -0.01f, 0.0f },
+					glm::vec3{ 0.0f },
 					false
 				},
 				{ // bottom right
 					glm::vec3{ 5.0f, -5.0f, 0.0f },
 					glm::vec3{ 0.0f, -0.01f, 0.0f },
+					glm::vec3{ 0.0f },
 					false
 				},
 				{ // top left
 					glm::vec3{ -5.0f, 5.0f, 0.0f },
 					glm::vec3{ 0.0f },
+					glm::vec3{ 0.0f },
 					true
 				},
 				{ // top right
 					glm::vec3{ 5.0f, 5.0f, 0.0f },
+					glm::vec3{ 0.0f },
 					glm::vec3{ 0.0f },
 					true
 				}
@@ -48,15 +53,8 @@ class MassSpringObject
 
 			// Make springs
 			for (size_t i{ 0 }; i < m_points.size(); ++i)
-			{
-				for (size_t j{ 0 }; j < m_points.size(); ++j)
-				{
-					if (i == j)
-						continue;
-
+				for (size_t j{ i + 1 }; j < m_points.size(); ++j)
 					m_springs.emplace_back(Spring{ i, j, glm::length(m_points[i].m_position - m_points[j].m_position), 1.0f });
-				}
-			}
 
             m_vertices.resize(m_points.size());
 			m_indices = 
@@ -85,14 +83,41 @@ class MassSpringObject
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
 
-		void updatePoints()
+		void updatePoints(float deltaTime)
 		{
+			constexpr float gravityForce = -9.81f;
+
+			for (const Spring& spring : m_springs)
+			{
+				const glm::vec3 d{ m_points[spring.j].m_position - m_points[spring.i].m_position };
+				const float length(glm::length(d));
+				if (length < 1e-6) continue;
+				const glm::vec3 direction{ d / length };
+
+				const float displacement{ length - spring.restLength };
+				const glm::vec3 force{ spring.stiffness * displacement * direction };
+
+				if (!m_points[spring.i].fixed)
+					m_points[spring.i].m_force += force;
+
+				if (!m_points[spring.j].fixed)
+					m_points[spring.j].m_force -= force;
+			}
+
 			for (MassSpringPoint& point : m_points)
 			{
 				if (point.fixed)
 					continue;
 
-				point.m_position.y -= 0.01f;
+				// Apply gravity force
+				point.m_force.y += gravityForce;
+
+				// Update velocity
+				point.m_velocity += point.m_force * deltaTime;
+				point.m_force = glm::vec3{ 0.0f };
+
+				// Update position
+				point.m_position += point.m_velocity * deltaTime;
 			}
 		}
 

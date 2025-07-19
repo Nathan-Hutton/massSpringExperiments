@@ -177,7 +177,7 @@ int main()
             }
 
             //massSpringObject.updatePhysics(fixedDeltaTime);
-			massSpringObject.updatePoints();
+			massSpringObject.updatePoints(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
         }
 
@@ -205,7 +205,7 @@ int main()
         // Render mass-spring objct
         glUniform3fv(glGetUniformLocation(mainShader, "diffuseMaterialColor"), 1, glm::value_ptr(glm::vec3{ 1.0f, 1.0f, 1.0f }));
         //massSpringPlane.draw();
-		massSpringObject.updatePoints();
+		massSpringObject.updatePoints(deltaTime);
 		massSpringObject.updateVBO();
         massSpringObject.draw();
 
